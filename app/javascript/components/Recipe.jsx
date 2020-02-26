@@ -75,12 +75,13 @@ class Recipe extends React.Component {
         ));
     }
     const recipeInstruction = this.addHtmlEntities(recipe.instruction);
+    const recipeImage = this.addHtmlEntities(recipe.image);
 
     return (
       <div className="">
         <div className="hero position-relative d-flex align-items-center justify-content-center">
           <img
-            src={recipe.image}
+            src={recipeImage}
             alt={`${recipe.name} image`}
             className="img-fluid position-absolute"
           />

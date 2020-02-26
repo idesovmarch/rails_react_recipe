@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ImageUploader from 'react-images-upload';
 
 class NewRecipe extends React.Component {
     constructor(props) {
@@ -7,12 +8,14 @@ class NewRecipe extends React.Component {
       this.state = {
         name: "",
         ingredients: "",
+        image: [],
         instruction: ""
       };
   
       this.onChange = this.onChange.bind(this);
       this.onSubmit = this.onSubmit.bind(this);
       this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
+      this.onDrop = this.onDrop.bind(this);
     }
   
     stripHtmlEntities(str) {
@@ -28,7 +31,7 @@ class NewRecipe extends React.Component {
     onSubmit(event) {
       event.preventDefault();
       const url = "/api/v1/recipes/create";
-      const { name, ingredients, instruction } = this.state;
+      const { name, ingredients, image, instruction } = this.state;
   
       if (name.length == 0 || ingredients.length == 0 || instruction.length == 0)
         return;
@@ -36,7 +39,8 @@ class NewRecipe extends React.Component {
       const body = {
         name,
         ingredients,
-        instruction: instruction.replace(/\n/g, "<br> <br>")
+        instruction: instruction.replace(/\n/g, "<br> <br>"),
+        image
       };
   
       const token = document.querySelector('meta[name="csrf-token"]').content;
@@ -57,10 +61,21 @@ class NewRecipe extends React.Component {
         .then(response => this.props.history.push(`/recipe/${response.id}`))
         .catch(error => console.log(error.message));
     }
+
+    onDrop(image) {
+      this.setState({
+        image: this.state.image.concat(image),
+      });
+    }
   
     render() {
       return (
         <div className="container mt-5">
+          <div className="text-left mb-3">
+            <Link to="/" className="btn custom-button mr-2">
+              Home
+            </Link>
+            </div>
           <div className="row">
             <div className="col-sm-12 col-lg-6 offset-lg-3">
               <h1 className="font-weight-normal mb-5">
@@ -91,6 +106,20 @@ class NewRecipe extends React.Component {
                   <small id="ingredientsHelp" className="form-text text-muted">
                     Separate each ingredient with a comma.
                   </small>
+                  
+                  <div className="input-group mb-3 mt-3"> 
+                    <div>
+                      <label htmlFor="recipeImage">Upload Recipe Image (optional)</label>
+                      <ImageUploader
+                      withIcon={true}
+                      buttonText='Choose Images'
+                      onChange={this.onDrop}
+                      imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                      maxFileSize={5242880}
+                     />                     
+                    </div>
+                  </div>
+
                 </div>
                 <label htmlFor="instruction">Preparation Instructions</label>
                 <textarea

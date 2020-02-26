@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(version: 2020_02_25_204157) do
     t.string "name", null: false
     t.text "ingredients", null: false
     t.text "instruction", null: false
-    t.string "image", default: "https://raw.githubusercontent.com/do-community/react_rails_recipe/master/app/assets/images/Sammy_Meal.jpg"
+    t.string "image", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
